@@ -2,6 +2,7 @@ from google.cloud import translate_v2 as translater
 from tqdm import tqdm
 import os
 import pandas as pd
+import json
 import argparse
 
 os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = './google_credential.json'
@@ -11,15 +12,27 @@ translate_client = translater.Client()
 def translate_row(row):
     res = row.copy()
     try:
-        res['text'] = translate_client.translate(
-            row['text'],
-            target_language='en',
-            source_language='es'
-        )['translatedText']
+        if not row['is_list']:
+            res['text'] = translate_client.translate(
+                row['text'],
+                target_language='en',
+                source_language='es'
+            )['translatedText']
+        else:
+            texts = json.loads(row['text'])
+            texts = [
+                translate_client.translate(
+                    text,
+                    target_language='en',
+                    source_language='es'
+                )['translatedText'] for text in texts
+            ]
+            res['text'] = json.dumps(texts)
     except:
-        print(res['content_key'])
+        print(res['content_key'], row['is_list'])
         res['text'] = ''
 
+    res['language'] = 'Inglés'
     return res
 
 
@@ -29,7 +42,10 @@ def translate(input_path, output_path):
 
     tqdm.pandas()
     df_translated = df.progress_apply(translate_row, axis=1)
-    df_translated.to_csv(output_path, index=False, sep='|')
+
+    df_final = pd.concat([df, df_translated])
+    df_final['is_list'] = df_final['is_list'].progress_apply(lambda x: 'true' if x else 'false') 
+    df_final.to_csv(output_path, index=False, sep='|')
 
 
 if __name__ == '__main__':
