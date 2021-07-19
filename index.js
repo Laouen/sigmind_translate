@@ -3,6 +3,7 @@ var current_key = undefined;
 var current_en_text = '';
 var keys = [];
 
+const sep = '|';
 const max_charcarters = 30;
 
 function update_en_text(event) {
@@ -30,7 +31,7 @@ function update_current_data(key) {
         current_en_text = data[key]['Inglés'];
 
         $('#data_key').html(key);
-        $('#data_text_es').html(data[key]['Español']);
+        $('#data_text_es').text(data[key]['Español']);
         $('#data_text_en').val(data[key]['Inglés'] || '');
     };
 }
@@ -48,7 +49,7 @@ function fill_sidebar_list(content) {
 
         var a = $("<a id='" + keys[i] + "' href='#' class='list-group-item list-group-item-action py-3 lh-tight'></a>");
         var div = $("<div class='d-flex w-100 align-items-center justify-content-between'></div>");
-        div.append("<strong class='mb-1'>" + keys[i] + "</strong>");
+        div.append("<strong class='mb-1' style='word-break: break-word;'>" + keys[i] + "</strong>");
         a.append(div);
 
         var text_es = item['Español']
@@ -75,7 +76,7 @@ function fill_sidebar_list(content) {
     }
 }
 
-function csv2json(filecontent, sep=',') {
+function csv2json(filecontent) {
     
     var lines = filecontent.split('\n');
     var headers = lines[0].split(sep);
@@ -87,6 +88,12 @@ function csv2json(filecontent, sep=',') {
         var line_data = {}
         for (var j = 0; j < headers.length; j++) {
             line_data[headers[j]] = current_line[j];
+        }
+
+        // Por si hay un character de separacion en el texto que termine dividiendo el texto
+        for (var j = headers.length; j < current_line.length; j++) {
+            console.log(line_data['content_key']);
+            line_data[headers[headers.length-1]] += current_line[j];
         }
         
         if (['Español', 'Inglés'].indexOf(line_data['language']) < 0) {
@@ -133,7 +140,7 @@ function export_data() {
             '',
             'Inglés',
             data[key]['Inglés']
-        ].join(',') + '\n');
+        ].join(sep) + '\n');
     }
 
     var blob = new Blob(rows, { type: 'text/csv;charset=utf-8;' });

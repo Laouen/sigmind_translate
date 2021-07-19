@@ -43,7 +43,7 @@
       
       <div class="b-example-divider"></div>
 
-      <div class="d-flex flex-column align-items-stretch flex-shrink-0 bg-white" style="width: 25%;">
+      <div class="d-flex flex-column align-items-stretch flex-shrink-0 bg-white" style="width: 35%;">
         
         <div class="d-flex align-items-center flex-shrink-0 p-3 link-dark text-decoration-none border-bottom">
           <img src='./logo.svg' height="50px">
@@ -75,14 +75,14 @@
 
       <div class="b-example-divider"></div>
 
-      <div id='edit_content' class="d-flex flex-column align-items-stretch flex-shrink-0 bg-white" style="width: 70%; display: none !important">
+      <div id='edit_content' class="d-flex flex-column align-items-stretch flex-shrink-0 bg-white" style="width: 60%; display: none !important">
         
         <section class="py-5 text-center container">
           <div class="row py-lg-5">
-            <div class="col-lg-6 col-md-8 mx-auto">
-              <h1 id='data_key' class="fw-light"></h1>
+            <div class="col-lg-10 col-md-10 mx-auto">
+              <h1 id='data_key' class="fw-light" style="word-break: break-word;"></h1>
               <p id='data_text_es' class="lead text-muted mt-5"></p>
-              <textarea id='data_text_en' class='form-control mt-5' name='translated_text' rows=5 onchange='update_en_text(event)'></textarea>
+              <textarea id='data_text_en' class='form-control mt-5' name='translated_text' rows=15 onchange='update_en_text(event)'></textarea>
               <a href='#' class="btn btn-primary my-2" onclick="set_new_text()">Guardar</a>
             </div>
           </div>
