@@ -130,16 +130,24 @@ function new_input_model(evt) {
 }
 
 function export_data() {
-    var rows = ['content_key,is_list,locale,language,text\n'];
+    var rows = ['content_key|is_list|locale|language|text\n'];
 
     for (var i = 0; i < keys.length; i++) {
         var key = keys[i];
         rows.push([
             key,
-            JSON.stringify(data[key]['is_list']),
+            data[key]['is_list'] ? 'true' : 'false',
             '',
             'Inglés',
             data[key]['Inglés']
+        ].join(sep) + '\n');
+
+        rows.push([
+            key,
+            data[key]['is_list'] ? 'true' : 'false',
+            '',
+            'Español',
+            data[key]['Español']
         ].join(sep) + '\n');
     }
 
